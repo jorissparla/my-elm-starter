@@ -34,7 +34,7 @@ root model =
 
 searchField =
     div [ class "mdl-textfield mdl-js-textfield" ]
-        [ input [ placeholder "Search..", class "mdl-textfield__input", id "sample1", type' "text", style [ ( "left-margin", "30px" ) ] ]
+        [ input [ placeholder "Search.", class "mdl-textfield__input", id "sample1", type' "text", style [ ( "left-margin", "30px" ) ] ]
             []
         ]
 
