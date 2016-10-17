@@ -28,3 +28,28 @@ getNews =
     Http.get decodeNews endpoint
         |> Task.perform Failed Succeed
         |> Cmd.map GetNewsResponse
+
+
+decodeAccountItem : Decoder Account
+decodeAccountItem =
+    object4
+        Account
+        ("id" := string)
+        ("fullname" := string)
+        ("team" := string)
+        ("location" := string)
+
+
+decodeAccount : Decoder (List Account)
+decodeAccount =
+    (list decodeAccountItem)
+
+
+getAccounts =
+    Http.get decodeAccount accountendpoint
+        |> Task.perform Failed Succeed
+        |> Cmd.map GetAccountResponse
+
+
+accountendpoint =
+    "http://localhost:3000/api/accounts"

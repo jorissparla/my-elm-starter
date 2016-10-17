@@ -7,6 +7,10 @@ type alias News =
     { headline : String, url : Maybe String }
 
 
+type alias Account =
+    { id : String, fullname : String, team : String, location : String }
+
+
 type FetchedData a
     = Loading
     | Failed Http.Error
@@ -21,4 +25,5 @@ type alias Model =
 
 type Msg
     = GetNewsResponse (FetchedData (List News))
+    | GetAccountResponse (FetchedData (List Account))
     | SearchTextEntered String

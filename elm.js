@@ -8708,6 +8708,10 @@ var _user$project$Types$News = F2(
 	function (a, b) {
 		return {headline: a, url: b};
 	});
+var _user$project$Types$Account = F4(
+	function (a, b, c, d) {
+		return {id: a, fullname: b, team: c, location: d};
+	});
 var _user$project$Types$Model = F2(
 	function (a, b) {
 		return {news: a, searchText: b};
@@ -8722,10 +8726,30 @@ var _user$project$Types$Loading = {ctor: 'Loading'};
 var _user$project$Types$SearchTextEntered = function (a) {
 	return {ctor: 'SearchTextEntered', _0: a};
 };
+var _user$project$Types$GetAccountResponse = function (a) {
+	return {ctor: 'GetAccountResponse', _0: a};
+};
 var _user$project$Types$GetNewsResponse = function (a) {
 	return {ctor: 'GetNewsResponse', _0: a};
 };
 
+var _user$project$Rest$accountendpoint = 'http://localhost:3000/api/accounts';
+var _user$project$Rest$decodeAccountItem = A5(
+	_elm_lang$core$Json_Decode$object4,
+	_user$project$Types$Account,
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'id', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'fullname', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'team', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'location', _elm_lang$core$Json_Decode$string));
+var _user$project$Rest$decodeAccount = _elm_lang$core$Json_Decode$list(_user$project$Rest$decodeAccountItem);
+var _user$project$Rest$getAccounts = A2(
+	_elm_lang$core$Platform_Cmd$map,
+	_user$project$Types$GetAccountResponse,
+	A3(
+		_elm_lang$core$Task$perform,
+		_user$project$Types$Failed,
+		_user$project$Types$Succeed,
+		A2(_evancz$elm_http$Http$get, _user$project$Rest$decodeAccount, _user$project$Rest$accountendpoint)));
 var _user$project$Rest$endpoint = 'https://hn.algolia.com/api/v1/search_by_date?tags=story&hitsPerPage=50';
 var _user$project$Rest$decodeNewsItem = A3(
 	_elm_lang$core$Json_Decode$object2,
