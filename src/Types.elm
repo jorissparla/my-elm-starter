@@ -3,12 +3,8 @@ module Types exposing (..)
 import Http
 
 
-type alias News =
-    { headline : String, url : Maybe String }
-
-
 type alias Account =
-    { id : String, fullname : String, team : String, location : String }
+    { uic : String, fullname : String, team : String, location : String, region : String, date_changed : String, workload : Int }
 
 
 type FetchedData a
@@ -18,12 +14,11 @@ type FetchedData a
 
 
 type alias Model =
-    { news : FetchedData (List News)
-    , searchText : String
+    { searchText : String
+    , accounts : FetchedData (List Account)
     }
 
 
 type Msg
-    = GetNewsResponse (FetchedData (List News))
-    | GetAccountResponse (FetchedData (List Account))
+    = GetAccountResponse (FetchedData (List Account))
     | SearchTextEntered String

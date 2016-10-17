@@ -8704,17 +8704,13 @@ var _evancz$elm_http$Http$post = F3(
 			A2(_evancz$elm_http$Http$send, _evancz$elm_http$Http$defaultSettings, request));
 	});
 
-var _user$project$Types$News = F2(
-	function (a, b) {
-		return {headline: a, url: b};
-	});
-var _user$project$Types$Account = F4(
-	function (a, b, c, d) {
-		return {id: a, fullname: b, team: c, location: d};
+var _user$project$Types$Account = F7(
+	function (a, b, c, d, e, f, g) {
+		return {uic: a, fullname: b, team: c, location: d, region: e, date_changed: f, workload: g};
 	});
 var _user$project$Types$Model = F2(
 	function (a, b) {
-		return {news: a, searchText: b};
+		return {searchText: a, accounts: b};
 	});
 var _user$project$Types$Succeed = function (a) {
 	return {ctor: 'Succeed', _0: a};
@@ -8729,18 +8725,18 @@ var _user$project$Types$SearchTextEntered = function (a) {
 var _user$project$Types$GetAccountResponse = function (a) {
 	return {ctor: 'GetAccountResponse', _0: a};
 };
-var _user$project$Types$GetNewsResponse = function (a) {
-	return {ctor: 'GetNewsResponse', _0: a};
-};
 
 var _user$project$Rest$accountendpoint = 'http://localhost:3000/api/accounts';
-var _user$project$Rest$decodeAccountItem = A5(
-	_elm_lang$core$Json_Decode$object4,
+var _user$project$Rest$decodeAccountItem = A8(
+	_elm_lang$core$Json_Decode$object7,
 	_user$project$Types$Account,
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'id', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'uic', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode_ops[':='], 'fullname', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode_ops[':='], 'team', _elm_lang$core$Json_Decode$string),
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'location', _elm_lang$core$Json_Decode$string));
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'location', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'region', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'date_changed', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'workload', _elm_lang$core$Json_Decode$int));
 var _user$project$Rest$decodeAccount = _elm_lang$core$Json_Decode$list(_user$project$Rest$decodeAccountItem);
 var _user$project$Rest$getAccounts = A2(
 	_elm_lang$core$Platform_Cmd$map,
@@ -8750,25 +8746,6 @@ var _user$project$Rest$getAccounts = A2(
 		_user$project$Types$Failed,
 		_user$project$Types$Succeed,
 		A2(_evancz$elm_http$Http$get, _user$project$Rest$decodeAccount, _user$project$Rest$accountendpoint)));
-var _user$project$Rest$endpoint = 'https://hn.algolia.com/api/v1/search_by_date?tags=story&hitsPerPage=50';
-var _user$project$Rest$decodeNewsItem = A3(
-	_elm_lang$core$Json_Decode$object2,
-	_user$project$Types$News,
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'title', _elm_lang$core$Json_Decode$string),
-	_elm_lang$core$Json_Decode$maybe(
-		A2(_elm_lang$core$Json_Decode_ops[':='], 'url', _elm_lang$core$Json_Decode$string)));
-var _user$project$Rest$decodeNews = A2(
-	_elm_lang$core$Json_Decode_ops[':='],
-	'hits',
-	_elm_lang$core$Json_Decode$list(_user$project$Rest$decodeNewsItem));
-var _user$project$Rest$getNews = A2(
-	_elm_lang$core$Platform_Cmd$map,
-	_user$project$Types$GetNewsResponse,
-	A3(
-		_elm_lang$core$Task$perform,
-		_user$project$Types$Failed,
-		_user$project$Types$Succeed,
-		A2(_evancz$elm_http$Http$get, _user$project$Rest$decodeNews, _user$project$Rest$endpoint)));
 
 var _user$project$State$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
@@ -8776,12 +8753,12 @@ var _user$project$State$subscriptions = function (model) {
 var _user$project$State$update = F2(
 	function (msg, model) {
 		var _p0 = A2(_elm_lang$core$Debug$log, 'action', msg);
-		if (_p0.ctor === 'GetNewsResponse') {
+		if (_p0.ctor === 'GetAccountResponse') {
 			return {
 				ctor: '_Tuple2',
 				_0: _elm_lang$core$Native_Utils.update(
 					model,
-					{news: _p0._0}),
+					{accounts: _p0._0}),
 				_1: _elm_lang$core$Platform_Cmd$none
 			};
 		} else {
@@ -8796,15 +8773,24 @@ var _user$project$State$update = F2(
 	});
 var _user$project$State$init = {
 	ctor: '_Tuple2',
-	_0: {news: _user$project$Types$Loading, searchText: ''},
-	_1: _user$project$Rest$getNews
+	_0: {searchText: '', accounts: _user$project$Types$Loading},
+	_1: _user$project$Rest$getAccounts
 };
 
 var _user$project$View$getCapitalItemName = function (item) {
 	return _elm_lang$core$String$toUpper(
 		A3(_elm_lang$core$String$slice, 0, 1, item));
 };
-var _user$project$View$newsItem3 = function (news) {
+var _user$project$View$getNameandLocation = function (accounts) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		accounts.fullname,
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'(',
+			A2(_elm_lang$core$Basics_ops['++'], accounts.location, ')')));
+};
+var _user$project$View$accountItem = function (accounts) {
 	return A2(
 		_elm_lang$html$Html$li,
 		_elm_lang$core$Native_List.fromArray(
@@ -8823,7 +8809,7 @@ var _user$project$View$newsItem3 = function (news) {
 				_elm_lang$core$Native_List.fromArray(
 					[
 						_elm_lang$html$Html$text(
-						_user$project$View$getCapitalItemName(news.headline))
+						_user$project$View$getCapitalItemName(accounts.region))
 					])),
 				A2(
 				_elm_lang$html$Html$span,
@@ -8841,7 +8827,8 @@ var _user$project$View$newsItem3 = function (news) {
 							]),
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html$text('Frederikssund')
+								_elm_lang$html$Html$text(
+								_user$project$View$getNameandLocation(accounts))
 							])),
 						A2(
 						_elm_lang$html$Html$span,
@@ -8851,7 +8838,7 @@ var _user$project$View$newsItem3 = function (news) {
 							]),
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html$text(news.headline)
+								_elm_lang$html$Html$text(accounts.team)
 							]))
 					])),
 				A2(
@@ -8862,137 +8849,7 @@ var _user$project$View$newsItem3 = function (news) {
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html$text('15:01')
-					]))
-			]));
-};
-var _user$project$View$newsItem2 = function (news) {
-	return A2(
-		_elm_lang$html$Html$div,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$html$Html_Attributes$class('col s12 m7')
-			]),
-		_elm_lang$core$Native_List.fromArray(
-			[
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('card horizontal small')
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						A2(
-						_elm_lang$html$Html$div,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html_Attributes$class('card-image')
-							]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								A2(
-								_elm_lang$html$Html$img,
-								_elm_lang$core$Native_List.fromArray(
-									[
-										_elm_lang$html$Html_Attributes$src('https://unsplash.it/150?random')
-									]),
-								_elm_lang$core$Native_List.fromArray(
-									[]))
-							])),
-						A2(
-						_elm_lang$html$Html$div,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html_Attributes$class('card-stacked')
-							]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								A2(
-								_elm_lang$html$Html$div,
-								_elm_lang$core$Native_List.fromArray(
-									[
-										_elm_lang$html$Html_Attributes$class('card-content')
-									]),
-								_elm_lang$core$Native_List.fromArray(
-									[
-										A2(
-										_elm_lang$html$Html$p,
-										_elm_lang$core$Native_List.fromArray(
-											[]),
-										_elm_lang$core$Native_List.fromArray(
-											[
-												_elm_lang$html$Html$text(news.headline)
-											]))
-									])),
-								A2(
-								_elm_lang$html$Html$div,
-								_elm_lang$core$Native_List.fromArray(
-									[
-										_elm_lang$html$Html_Attributes$class('card-action')
-									]),
-								_elm_lang$core$Native_List.fromArray(
-									[
-										A2(
-										_elm_lang$html$Html$a,
-										_elm_lang$core$Native_List.fromArray(
-											[
-												_elm_lang$html$Html_Attributes$href(
-												A2(_elm_lang$core$Maybe$withDefault, 'No val', news.url))
-											]),
-										_elm_lang$core$Native_List.fromArray(
-											[
-												_elm_lang$html$Html$text('This is a link')
-											]))
-									]))
-							]))
-					]))
-			]));
-};
-var _user$project$View$newsItem = function (news) {
-	return A2(
-		_elm_lang$html$Html$li,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$html$Html_Attributes$class('.j-list__item--three-line')
-			]),
-		_elm_lang$core$Native_List.fromArray(
-			[
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('card'),
-						_elm_lang$html$Html_Attributes$style(
-						_elm_lang$core$Native_List.fromArray(
-							[
-								{ctor: '_Tuple2', _0: 'width', _1: '70%'},
-								{ctor: '_Tuple2', _0: 'float', _1: 'right'}
-							]))
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html$text(
-						A2(_elm_lang$core$Debug$log, 'Showing', news.headline))
-					])),
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						A2(
-						_elm_lang$html$Html$img,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html_Attributes$href(
-								A2(_elm_lang$core$Maybe$withDefault, 'No val', news.url)),
-								_elm_lang$html$Html_Attributes$alt('avatar'),
-								_elm_lang$html$Html_Attributes$class('j-list__item-avatar'),
-								_elm_lang$html$Html_Attributes$src('http://autokadabra.ru/system/uploads/users/18/18340/small.png?1318432918')
-							]),
-						_elm_lang$core$Native_List.fromArray(
-							[]))
+						_elm_lang$html$Html$text(accounts.date_changed)
 					]))
 			]));
 };
@@ -9023,8 +8880,8 @@ var _user$project$View$searchField = A2(
 				[]))
 		]));
 var _user$project$View$matchSearch = F2(
-	function (str, news) {
-		var fi = news.headline;
+	function (str, account) {
+		var fi = account.fullname;
 		return A2(_elm_lang$core$String$contains, str, fi);
 	});
 var _user$project$View$root = function (model) {
@@ -9046,7 +8903,7 @@ var _user$project$View$root = function (model) {
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html$text('News!')
+						_elm_lang$html$Html$text('Accounts!')
 					])),
 				_user$project$View$searchField,
 				A2(
@@ -9056,7 +8913,7 @@ var _user$project$View$root = function (model) {
 				_elm_lang$core$Native_List.fromArray(
 					[
 						function () {
-						var _p0 = model.news;
+						var _p0 = model.accounts;
 						switch (_p0.ctor) {
 							case 'Loading':
 								return _elm_lang$html$Html$text('Loading');
@@ -9095,7 +8952,7 @@ var _user$project$View$root = function (model) {
 														[]),
 													A2(
 														_elm_lang$core$List$map,
-														_user$project$View$newsItem3,
+														_user$project$View$accountItem,
 														A2(
 															_elm_lang$core$List$filter,
 															_user$project$View$matchSearch(model.searchText),
