@@ -8790,6 +8790,36 @@ var _user$project$View$getNameandLocation = function (accounts) {
 			'(',
 			A2(_elm_lang$core$Basics_ops['++'], accounts.location, ')')));
 };
+var _user$project$View$regionColor = function (region) {
+	var _p0 = region;
+	switch (_p0) {
+		case 'EMEA':
+			return 'mdl-typography--title-color-contrast mdl-color-text--accent-contrast  mdl-color--light-blue-500';
+		case 'NA':
+			return 'mdl-typography--title-color-contrast mdl-color-text--accent-contrast  mdl-color--purple-500';
+		case 'APJ':
+			return 'mdl-typography--title-color-contrast mdl-color-text--accent-contrast  mdl-color--green-500';
+		case 'GLB':
+			return 'mdl-typography--title-color-contrast mdl-color-text--accent-contrast  mdl-color--red-500';
+		default:
+			return 'mdl-typography--title-color-contrast mdl-color-text--accent-contrast mdl-color--orange-500';
+	}
+};
+var _user$project$View$regionHeader = function (accounts) {
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class(
+				_user$project$View$regionColor(accounts.region)),
+				A2(_elm_lang$html$Html_Attributes$attribute, 'style', 'margin-right: 2rem; height: 36px; width: 36px; justify-content: center; align-items: center; display: flex;')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html$text(
+				_user$project$View$getCapitalItemName(accounts.region))
+			]));
+};
 var _user$project$View$accountItem = function (accounts) {
 	return A2(
 		_elm_lang$html$Html$li,
@@ -8799,18 +8829,7 @@ var _user$project$View$accountItem = function (accounts) {
 			]),
 		_elm_lang$core$Native_List.fromArray(
 			[
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('mdl-typography--title-color-contrast mdl-color-text--accent-contrast mdl-color--red-500'),
-						A2(_elm_lang$html$Html_Attributes$attribute, 'style', 'margin-right: 2rem; height: 36px; width: 36px; justify-content: center; align-items: center; display: flex;')
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html$text(
-						_user$project$View$getCapitalItemName(accounts.region))
-					])),
+				_user$project$View$regionHeader(accounts),
 				A2(
 				_elm_lang$html$Html$span,
 				_elm_lang$core$Native_List.fromArray(
@@ -8857,32 +8876,52 @@ var _user$project$View$searchField = A2(
 	_elm_lang$html$Html$div,
 	_elm_lang$core$Native_List.fromArray(
 		[
-			_elm_lang$html$Html_Attributes$class('mdl-textfield mdl-js-textfield')
+			_elm_lang$html$Html_Attributes$class('mdl-grid')
 		]),
 	_elm_lang$core$Native_List.fromArray(
 		[
 			A2(
-			_elm_lang$html$Html$input,
+			_elm_lang$html$Html$div,
 			_elm_lang$core$Native_List.fromArray(
 				[
-					_elm_lang$html$Html_Events$onInput(_user$project$Types$SearchTextEntered),
-					_elm_lang$html$Html_Attributes$placeholder('Search.'),
-					_elm_lang$html$Html_Attributes$class('mdl-textfield__input'),
-					_elm_lang$html$Html_Attributes$id('sample1'),
-					_elm_lang$html$Html_Attributes$type$('text'),
-					_elm_lang$html$Html_Attributes$style(
-					_elm_lang$core$Native_List.fromArray(
-						[
-							{ctor: '_Tuple2', _0: 'left-margin', _1: '30px'}
-						]))
+					_elm_lang$html$Html_Attributes$class('mdl-cell--2-offset-desktop mdl-cell--3-col-desktop mdl-cell--8-col-tablet mdl-cell')
 				]),
 			_elm_lang$core$Native_List.fromArray(
-				[]))
+				[
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('mdl-textfield mdl-js-textfield')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							A2(
+							_elm_lang$html$Html$input,
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html_Events$onInput(_user$project$Types$SearchTextEntered),
+									_elm_lang$html$Html_Attributes$placeholder('Search.'),
+									_elm_lang$html$Html_Attributes$class('mdl-textfield__input'),
+									_elm_lang$html$Html_Attributes$id('sample1'),
+									_elm_lang$html$Html_Attributes$type$('text'),
+									_elm_lang$html$Html_Attributes$style(
+									_elm_lang$core$Native_List.fromArray(
+										[
+											{ctor: '_Tuple2', _0: 'left-margin', _1: '30px'}
+										]))
+								]),
+							_elm_lang$core$Native_List.fromArray(
+								[]))
+						]))
+				]))
 		]));
 var _user$project$View$matchSearch = F2(
 	function (str, account) {
+		var fo = account.location;
+		var fa = account.team;
 		var fi = account.fullname;
-		return A2(_elm_lang$core$String$contains, str, fi);
+		return A2(_elm_lang$core$String$contains, str, fi) || (A2(_elm_lang$core$String$contains, str, fa) || A2(_elm_lang$core$String$contains, str, fo));
 	});
 var _user$project$View$root = function (model) {
 	return A2(
@@ -8913,8 +8952,8 @@ var _user$project$View$root = function (model) {
 				_elm_lang$core$Native_List.fromArray(
 					[
 						function () {
-						var _p0 = model.accounts;
-						switch (_p0.ctor) {
+						var _p1 = model.accounts;
+						switch (_p1.ctor) {
 							case 'Loading':
 								return _elm_lang$html$Html$text('Loading');
 							case 'Failed':
@@ -8927,7 +8966,7 @@ var _user$project$View$root = function (model) {
 									_elm_lang$core$Native_List.fromArray(
 										[
 											_elm_lang$html$Html$text(
-											_elm_lang$core$Basics$toString(_p0._0))
+											_elm_lang$core$Basics$toString(_p1._0))
 										]));
 							default:
 								return A2(
@@ -8956,7 +8995,7 @@ var _user$project$View$root = function (model) {
 														A2(
 															_elm_lang$core$List$filter,
 															_user$project$View$matchSearch(model.searchText),
-															_p0._0)))
+															_p1._0)))
 												]))
 										]));
 						}
