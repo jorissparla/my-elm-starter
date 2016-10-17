@@ -8776,6 +8776,10 @@ var _user$project$State$init = {
 	_1: _user$project$Rest$getNews
 };
 
+var _user$project$View$getCapitalItemName = function (item) {
+	return _elm_lang$core$String$toUpper(
+		A3(_elm_lang$core$String$slice, 0, 1, item));
+};
 var _user$project$View$newsItem3 = function (news) {
 	return A2(
 		_elm_lang$html$Html$li,
@@ -8794,7 +8798,8 @@ var _user$project$View$newsItem3 = function (news) {
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html$text('H')
+						_elm_lang$html$Html$text(
+						_user$project$View$getCapitalItemName(news.headline))
 					])),
 				A2(
 				_elm_lang$html$Html$span,
@@ -8979,7 +8984,8 @@ var _user$project$View$searchField = A2(
 			_elm_lang$html$Html$input,
 			_elm_lang$core$Native_List.fromArray(
 				[
-					_elm_lang$html$Html_Attributes$placeholder('Search..'),
+					_elm_lang$html$Html_Events$onInput(_user$project$Types$SearchTextEntered),
+					_elm_lang$html$Html_Attributes$placeholder('Search.'),
 					_elm_lang$html$Html_Attributes$class('mdl-textfield__input'),
 					_elm_lang$html$Html_Attributes$id('sample1'),
 					_elm_lang$html$Html_Attributes$type$('text'),
@@ -8992,6 +8998,11 @@ var _user$project$View$searchField = A2(
 			_elm_lang$core$Native_List.fromArray(
 				[]))
 		]));
+var _user$project$View$matchSearch = F2(
+	function (str, news) {
+		var fi = news.headline;
+		return A2(_elm_lang$core$String$contains, str, fi);
+	});
 var _user$project$View$root = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -9017,9 +9028,7 @@ var _user$project$View$root = function (model) {
 				A2(
 				_elm_lang$html$Html$div,
 				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('card')
-					]),
+					[]),
 				_elm_lang$core$Native_List.fromArray(
 					[
 						function () {
@@ -9060,7 +9069,13 @@ var _user$project$View$root = function (model) {
 													_elm_lang$html$Html$ul,
 													_elm_lang$core$Native_List.fromArray(
 														[]),
-													A2(_elm_lang$core$List$map, _user$project$View$newsItem3, _p0._0))
+													A2(
+														_elm_lang$core$List$map,
+														_user$project$View$newsItem3,
+														A2(
+															_elm_lang$core$List$filter,
+															_user$project$View$matchSearch(model.searchText),
+															_p0._0)))
 												]))
 										]));
 						}
