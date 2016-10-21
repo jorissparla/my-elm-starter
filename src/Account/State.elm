@@ -1,7 +1,7 @@
-module State exposing (..)
+module Account.State exposing (..)
 
-import Rest exposing (..)
-import Types exposing (..)
+import Account.Rest exposing (..)
+import Account.Types exposing (..)
 
 
 init : ( Model, Cmd Msg )
@@ -23,6 +23,16 @@ update msg model =
 
         SearchTextEntered str ->
             ( { model | searchText = str }
+            , Cmd.none
+            )
+
+        EditAccount accid ->
+            ( { model | searchText = accid }
+            , Cmd.none
+            )
+
+        DeleteAccount accid ->
+            ( { model | searchText = "" }
             , Cmd.none
             )
 

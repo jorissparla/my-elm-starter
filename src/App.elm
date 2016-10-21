@@ -1,15 +1,15 @@
 module App exposing (..)
 
 import Html.App
-import State
-import View
+import Account.State
+import Account.View
 
 
 main : Program Never
 main =
     Html.App.program
-        { init = State.init
-        , update = State.update
-        , subscriptions = State.subscriptions
-        , view = View.root
+        { init = Account.State.init
+        , update = Account.State.update
+        , subscriptions = Account.State.subscriptions
+        , view = Account.View.root
         }

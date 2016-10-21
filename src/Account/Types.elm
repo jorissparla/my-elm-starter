@@ -1,6 +1,12 @@
-module Types exposing (..)
+module Account.Types exposing (..)
 
 import Http
+
+
+type Route
+    = AccountsRoute
+    | AccountRoute AccountId
+    | NotFoundRoute
 
 
 type alias Account =
@@ -22,3 +28,5 @@ type alias Model =
 type Msg
     = GetAccountResponse (FetchedData (List Account))
     | SearchTextEntered String
+    | EditAccount String
+    | DeleteAccount String

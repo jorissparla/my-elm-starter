@@ -1,9 +1,9 @@
-module Rest exposing (..)
+module Account.Rest exposing (..)
 
 import Http
 import Json.Decode exposing (..)
 import Task
-import Types exposing (..)
+import Account.Types exposing (..)
 
 
 decodeAccountItem : Decoder Account
@@ -31,4 +31,5 @@ getAccounts =
 
 
 accountendpoint =
+    ---"http://nlbavwtls22:3000/api/accounts"
     "http://localhost:3000/api/accounts"
